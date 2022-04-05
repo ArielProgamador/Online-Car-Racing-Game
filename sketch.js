@@ -6,6 +6,7 @@ var allPlayers;
 var cars, car1, car2, car3, car4;
 var car1Img, car2Img, car3Img, car4Img, ground, track;
 var bg;
+var rank
 
 function preload() {
   car1Img = loadImage("images/car1.png");//novo

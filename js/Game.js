@@ -32,29 +32,44 @@ class Game {
         car2 = createSprite(600,displayHeight/2);
         car3 = createSprite(800,displayHeight/2);
         car4 = createSprite(1000,displayHeight/2);
+        car1.addImage('white',car1Img);
+        car1.addImage('red',car2Img);
+        car1.addImage('blue',car3Img);
+        car1.addImage('black',car4Img);
+        car2.addImage('white',car1Img);
+        car2.addImage('red',car2Img);
+        car2.addImage('blue',car3Img);
+        car2.addImage('black',car4Img);
+        car3.addImage('white',car1Img);
+        car3.addImage('red',car2Img);
+        car3.addImage('blue',car3Img);
+        car3.addImage('black',car4Img);
+        car4.addImage('white',car1Img);
+        car4.addImage('red',car2Img);
+        car4.addImage('blue',car3Img);
+        car4.addImage('black',car4Img);
+    
+        car1.scale=1.5;
+        car2.scale=1.5;
+        car3.scale=1.5;
+        car4.scale=1.5;
         cars = [car1, car2, car3, car4];
-        car1.addImage(car1Img)
-        car2.addImage(car2Img)
-        car3.addImage(car3Img)
-        car4.addImage(car4Img)
-        car1.scale=1.5
-        car2.scale=1.5
-        car3.scale=1.5
-        car4.scale=1.5
     }
 
     //estado de jogo jogar
     play() {
         form.esconder();
         Player.getPlayerInfo();
+        player.getCarsAtEnd();
 
         if (allPlayers !== undefined) {
-            background(ground)
-            image(track,0,-displayHeight*3.5,displayWidth,displayHeight*5)
+            background(ground);
+            image(track,0,-displayHeight*3.5,displayWidth,displayHeight*5);
+
             //index ada matriz de carros
             var index = 0;
 
-            var x = 175;
+            var x = 250;
             var y;
 
 
@@ -62,12 +77,31 @@ class Game {
             for (var jgdr in allPlayers) {
 
                 index += 1;
-                x += 225;
+                x += 300;
 
                 y = displayHeight - allPlayers[jgdr].distance;
 
                 cars[index-1].x = x;
                 cars[index-1].y = y;
+
+                //color choice
+                switch (allPlayers[jgdr].color) {
+                    case "white":
+                        cars[index-1].changeImage('white',car1Img);
+                        break;
+                    case "red":
+                        cars[index-1].changeImage('red',car2Img);
+                        break;
+                    case "blue":
+                        cars[index-1].changeImage('blue', car3Img);
+                        break;
+                    case "black":
+                        cars[index-1].changeImage('black', car4Img);
+                        break;
+                    default:
+                        console.error("could not identify the color of the player " + allPlayers[jgdr] + " on the database");
+                        break;
+                }
 
                 if (index === player.index) {
                     fill("red");
@@ -81,15 +115,19 @@ class Game {
 
         if (keyDown(UP_ARROW) && player.index !== null) {
             player.distance += 50;
-            if (player.distance>3900) {
-                player.distance=3900
+            if (player.distance>displayHeight*4.5-100) {
+                player.distance=displayHeight*4.5-100;
                 
             }
             player.update();
         }
-        if (player.distance===3900) {
+        if (player.distance===displayHeight*4.5-100) {
+            player.rank+=1
+            player.update()
+            Player.updateCarsAtEnd(player.rank)
             gameState=2
             game.update(2)
+
         }
        
     }
@@ -102,13 +140,13 @@ class Game {
             //index ada matriz de carros
             var index = 0;
 
-            var x = 175;
+            var x = 250;
             var y;
             
             for (var jgdr in allPlayers) {
 
                 index += 1;
-                x += 225;
+                x += 300;
 
                 y = displayHeight - allPlayers[jgdr].distance;
 
@@ -123,6 +161,9 @@ class Game {
             }
         }
         form.title.html("GREAT JOB")
-        console.log("fin")
+        console.log(player.rank)
+        var textrank=createElement("h1")
+        textrank.html("AMAZING! Your rank is: "+player.rank)
+        textrank.position(displayWidth/2-300,displayHeight/2+60)
     }
 }
